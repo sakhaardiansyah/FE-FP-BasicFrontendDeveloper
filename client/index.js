@@ -100,16 +100,16 @@ async function handleEditForm(event) {
       }
     */
     // TODO: answer here
-    const title = document.getElementById("title").value;
-    const author = document.getElementById("author").value;
-    const year = document.getElementById("year").value;
-    const quantity = document.getElementById("quantity").value;
+    const getTitle = document.getElementById("title").value;
+    const getAuthor = document.getElementById("author").value;
+    const getYear = document.getElementById("year").value;
+    const getQuantity = document.getElementById("quantity").value;
 
     const book = {
-      title: title,
-      author: author,
-      year: year,
-      quantity: quantity,
+      title: getTitle,
+      author: getAuthor,
+      year: getYear,
+      quantity: getQuantity,
     };
 
     // panggil function editBook dengan parameter book
@@ -274,8 +274,7 @@ async function loadPage() {
         kemudian isi innerHTML dari form dengan formInput
       */
       // TODO: answer here
-      let formInput = generateEditFormInput();
-      form.innerHTML = formInput;
+      form.innerHTML = generateEditFormInput();
       break;
     case "add":
       main.innerHTML = pageAddBookMainContent;
