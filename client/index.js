@@ -55,8 +55,9 @@ async function handleClickEditButton(bookId) {
   try {
     // Ambil data buku dari server berdasarkan id, simpan hasilnya ke variabel currentBook
     // TODO: answer here
-    const data = await fetch(`http://localhost:3333/books/${bookId}`);
-    currentBook = await data.json();
+    const res = await fetch(`http://localhost:3333/books/${bookId}`);
+    const jsonData = await res.json();
+    currentBook = jsonData;
 
     currentPage = "edit";
     loadPage();
@@ -67,14 +68,14 @@ async function handleClickEditButton(bookId) {
 }
 async function handleClickDeleteButton(bookId) {
   try {
-    const confirmation = confirm("Apakah anda yakin ingin menghapus buku ini?");
-    if (!confirmation) {
-      return;
-    }
+    // const confirmation = confirm("Apakah anda yakin ingin menghapus buku ini?");
+    // if (!confirmation) {
+    //   return;
+    // }
 
     //panggil function deleteBook dengan parameter bookId
     // TODO: answer here
-    deleteBook(bookId);
+    await deleteBook(bookId);
     loadPage();
   } catch (error) {
     console.log(error);
@@ -113,7 +114,7 @@ async function handleEditForm(event) {
 
     // panggil function editBook dengan parameter book
     // TODO: answer here
-    editBook(book);
+    await editBook(book);
 
     currentBook = null;
 
@@ -141,21 +142,23 @@ async function handleAddForm(event) {
       }
     */
     // TODO: answer here
-    const title = document.getElementById("title").value;
-    const author = document.getElementById("author").value;
-    const year = document.getElementById("year").value;
-    const quantity = document.getElementById("quantity").value;
+    const getTitle = document.getElementById("title").value;
+    const getAuthor = document.getElementById("author").value;
+    const getYear = document.getElementById("year").value;
+    const getQuantity = document.getElementById("quantity").value;
 
     const book = {
-      title: title,
-      author: author,
-      year: year,
-      quantity: quantity,
+      title: getTitle,
+      author: getAuthor,
+      year: getYear,
+      quantity: getQuantity,
     };
+
+    console.log(book);
 
     // panggil function addBook dengan parameter book
     // TODO: answer here
-    addBook(book);
+    await addBook(book);
 
     currentPage = "home";
     loadPage();
@@ -176,9 +179,7 @@ function handleClickAddNav() {
 const navLinks = document.querySelectorAll("li a");
 navLinks.forEach((navLink) => {
   // TODO: answer here
-  navLink.addEventListener("click", () => {
-    handleClickAddNav();
-  });
+  navLink.addEventListener("click", () => handleClickAddNav());
 });
 
 function generateRows(books) {
@@ -205,20 +206,20 @@ function generateRows(books) {
     */
 
     // TODO: answer here
-    books.forEach((book) => {
-      let row = `<tr class="book-item">
-          <td class="px-6 py-4 border-b">${book.title}</td>
-          <td class="px-6 py-4 border-b">${book.author}</td>
-          <td class="px-6 py-4 border-b">${book.year}</td>
-          <td class="px-6 py-4 border-b">${book.quantity}</td>
+    books.forEach(
+      (data) =>
+        (rows += `<tr class="book-item">
+          <td class="px-6 py-4 border-b">${data.title}</td>
+          <td class="px-6 py-4 border-b">${data.author}</td>
+          <td class="px-6 py-4 border-b">${data.year}</td>
+          <td class="px-6 py-4 border-b">${data.quantity}</td>
           <td class="px-6 py-4 border-b text-center">
-            <button class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="handleClickEditButton(${book.id})">Edit</button>
-            <button class="inline-block bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onclick="handleClickDeleteButton(${book.id})">Hapus</button>  
+            <button class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="handleClickEditButton(${data.id})">Edit</button>
+            <button class="inline-block bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onclick="handleClickDeleteButton(${data.id})">Hapus</button>  
           </td>
-        </tr>`;
-
-      rows = rows + row;
-    });
+        </tr>
+        `)
+    );
   }
   return rows;
 }
@@ -289,8 +290,9 @@ async function fetchBooks() {
       simpan hasilnya ke variabel global books
     */
     // TODO: answer here
-    const data = await fetch(`http://localhost:3333/books`);
-    books = await data.json();
+    const res = await fetch("http://localhost:3333/books");
+    const jsonData = await res.json();
+    books = jsonData;
   } catch (error) {
     console.log(error);
     console.log("Terjadi kesalahan saat mengambil data buku");
@@ -311,6 +313,8 @@ async function addBook(book) {
       },
       body: JSON.stringify(book),
     });
+    const result = await res.json();
+    return result;
   } catch (error) {
     console.log(error);
     console.log("Terjadi kesalahan saat menambah buku");
@@ -324,7 +328,7 @@ async function editBook(book) {
       body yang dikirim adalah book yang dikirimkan sebagai parameter function
     */
     // TODO: answer here
-    const res = await fetch(`http://localhost:3333/books/${currentBook.id}`, {
+    await fetch(`http://localhost:3333/books/${currentBook.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -344,12 +348,11 @@ async function deleteBook(bookId) {
       id buku yang akan dihapus dikirimkan sebagai parameter function
     */
     // TODO: answer here
-    await fetch(`http://localhost:3333/books/${bookId}`, {
+    const res = await fetch(`http://localhost:3333/books/${bookId}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
+    const result = await res.json();
+    return result;
   } catch (error) {
     console.log(error);
     console.log("Terjadi kesalahan saat menghapus buku");
