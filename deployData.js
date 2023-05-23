@@ -10,6 +10,6 @@ const studentName = "Sakha Ardiansyah"; // TODO: replace this
 
 const studentId = "FE5319718"; // TODO: replace this
 
-const NetlifyDeployUrl = "https://halostudentt.netlify.app/"; // TODO: replace this
+const NetlifyDeployUrl = "https://splendid-hotteok-f0e7b2.netlify.app/client"; // TODO: replace this
 
 module.exports = { studentName, studentId, NetlifyDeployUrl };
